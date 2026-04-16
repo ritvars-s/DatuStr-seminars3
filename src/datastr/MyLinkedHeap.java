@@ -116,4 +116,26 @@ public class MyLinkedHeap<Ttype> {
 		node1.setElement(node2.getElement());
 		node2.setElement(tempelement);
 	}
+	public void print() throws Exception{
+		if(isEmpty()) {
+			throw new Exception("Kaudze ir tuksa");
+		}
+		printHelper(rootNode);
+		
+	}
+	private void printHelper(MyNode<Ttype> nodeTemp) {
+		if(nodeTemp != null) {
+			System.out.println("P: " + nodeTemp.getElement());
+			//nosakidrojam vai eksisste kreisais berns
+			if(nodeTemp.getLeftChNode() != null) {
+				System.out.println("P: " + nodeTemp.getElement() + " Left child: " + nodeTemp.getLeftChNode().getElement());
+				printHelper(nodeTemp.getLeftChNode());
+			}
+			if(nodeTemp.getRightChNode() != null) {
+				System.out.println("P: " + nodeTemp.getElement() + " Right child: " + nodeTemp.getRightChNode().getElement());
+				printHelper(nodeTemp.getRightChNode());
+			}
+		}
+		
+	}
 }
