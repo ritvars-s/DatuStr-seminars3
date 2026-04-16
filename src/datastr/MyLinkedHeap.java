@@ -27,6 +27,7 @@ public class MyLinkedHeap<Ttype> {
 	public boolean isEmpty() {
 		return (howManyElements == 0);
 	}
+	
 	public void enqueue(Ttype newElement) throws Exception{
 		if (isFull()) {
 			throw new Exception("Kaudz ir pilna un nav iespejams pievinot elementu");
@@ -49,7 +50,8 @@ public class MyLinkedHeap<Ttype> {
 				lastNode = newNode;
 				howManyElements++;
 				level++;
-				//TODO reHeapUp funkcija
+				reHeapUpMax(newNode);
+				return;
 			}
 			
 			if(lastNode.getLeftChNode() == null && lastNode.getRightChNode() == null) {
@@ -57,7 +59,8 @@ public class MyLinkedHeap<Ttype> {
 				newNode.setParentNode(lastNode);
 				lastNode = newNode;
 				howManyElements++;
-				//todo izsaukt reheap
+				reHeapUpMax(newNode);
+				return;
 			}
 			
 			//kad pedejam blokam nav blakus labais bloks
@@ -67,7 +70,8 @@ public class MyLinkedHeap<Ttype> {
 				
 				lastNode = newNode;
 				howManyElements++;
-				//TODO reHeapUp funkcija
+				reHeapUpMax(newNode);
+				return;
 			}
 			//2^0 = 1 elements 0 limeni
 			//2^1 = 2 elementi 1 limeni
@@ -90,10 +94,26 @@ public class MyLinkedHeap<Ttype> {
 				lastNode = newNode;
 				howManyElements++;
 				level++;
+				reHeapUpMax(newNode);
+				return;
+			}
+			//TODO izveidot pedejo scenariju, kurs no laba berna spej parlekt uz blakus apakskoka bernu
+		}
+	}
+	public void reHeapUpMax(MyNode<Ttype> nodeTemp) {
+		if(nodeTemp.getParentNode() != null) {
+			MyNode<Ttype> parentTempNode = nodeTemp.getParentNode(); 
+			if(((Comparable)nodeTemp.getElement()).compareTo(parentTempNode.getElement()) > 0) {
+				//mainam vietam vertibas
+				swap(parentTempNode, nodeTemp);
+				reHeapUpMax(parentTempNode); //izsaucam so pasu funkciju rekursivi
 				
 			}
 		}
 	}
-	
-	
+	public void swap(MyNode<Ttype> node1, MyNode<Ttype> node2) {
+		Ttype tempelement = node1.getElement();
+		node1.setElement(node2.getElement());
+		node2.setElement(tempelement);
+	}
 }
