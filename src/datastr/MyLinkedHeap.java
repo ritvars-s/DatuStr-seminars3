@@ -138,4 +138,23 @@ public class MyLinkedHeap<Ttype> {
 		}
 		
 	}
+	//veicamvisas parbaudes
+	//saglabasim root elementu mainigaja
+	//pedejo bloka vertubu ieliekam root bloka
+	//samazinam how manyelements
+	//last nnode samainit leve ...
+	public void dequeue() throws Exception {
+		if(isEmpty()) {
+			throw new Exception("kaudze ir tuksa nevar izmantot dequeue");
+		}
+		if(lastNode == rootNode) {
+			lastNode = null;
+			rootNode = null;
+			howManyElements--;
+			return;
+		}
+		
+		rootNode = lastNode.getElement();
+		
+	}
 }
