@@ -1,5 +1,8 @@
 package datastr;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class MyLinkedHeap<Ttype> {
 	private MyNode<Ttype> rootNode = null;
 	private MyNode<Ttype> lastNode = null;
@@ -173,6 +176,20 @@ public class MyLinkedHeap<Ttype> {
 				return;
 
 			} else {
+				// pēdējam blokam ir abi bērni
+				if (lastNode.getParentNode().getLeftChNode() != null
+						&& lastNode.getParentNode().getRightChNode() != null) {
+					int numberForNewNode = howManyElements;
+					int numberForNewNodeParent = (numberForNewNode-1 -1)/2;
+					MyNode<Ttype> currentParent = findInsertionNode();
+					currentParent.setLeftChNode(newNode);
+					newNode.setParentNode(currentParent);
+					lastNode = newNode;
+					reHeapUpMax(newNode);
+					howManyElements++;
+					return;
+				}
+
 				// pēdējam blokam nav neviens no bērniem
 				if (lastNode.getLeftChNode() == null && lastNode.getRightChNode() == null) {
 					lastNode.setLeftChNode(newNode);
@@ -184,12 +201,30 @@ public class MyLinkedHeap<Ttype> {
 				}
 
 			}
+
+			
 		}
 
-			// TODO izveidot pedējo scenāriju, kurs no labā bērna spej pārlekt
-			// uz blakus apkaškoka kreiso bērnu
+	}
+	private MyNode<Ttype> findInsertionNode() {
+		Queue<MyNode> queue = new LinkedList<>();
+		queue.add(rootNode);
+		while (!queue.isEmpty()) {
+			MyNode currentNode = queue.poll();
+			if (currentNode.getRightChNode() == null) {
+				return currentNode;
+			} else {
+				queue.add(currentNode.getRightChNode());
+			}
+			if (currentNode.getLeftChNode() == null) {
+				return currentNode;
+			} else {
+				queue.add(currentNode.getLeftChNode());
+			}
 
 		}
+		return null;
+	}
 	public void reHeapUpMax(MyNode<Ttype> nodeTemp) {
 		if(nodeTemp.getParentNode() != null) {
 			MyNode<Ttype> parentTempNode = nodeTemp.getParentNode(); 
@@ -238,17 +273,54 @@ public class MyLinkedHeap<Ttype> {
 			throw new Exception("kaudze ir tuksa nevar izmantot dequeue");
 		}
 		Ttype elem;
+		elem = rootNode.getElement();
+		rootNode.setElement(lastNode.getElement());
 		if(lastNode == rootNode) {
-			elem = rootNode.getElement();
 			lastNode = null;
 			rootNode = null;
 			howManyElements--;
 			return elem;
 		}
 		
-		else {
-			
+		if(lastNode.getParentNode().getLeftChNode() == lastNode) {
+			lastNode.getParentNode().setLeftChNode(null);
 		}
+		if(lastNode.getParentNode().getRightChNode() == lastNode) {
+			lastNode.getParentNode().setRightChNode(null);
+		}
+		//lastNode jasamaina
+		howManyElements--;
+		reheapDown(rootNode);
+		
+		return elem;
+		
+	}
+	
+	private void reheapDown(MyNode<Ttype> root) throws Exception{
+		
+		if(root != null) {
+			if(root.getLeftChNode() !=null && root.getRightChNode() == null) {
+				if(((Comparable)root.getElement()).compareTo(root.getLeftChNode().getElement()) < 0) {
+					swap(root, root.getLeftChNode());
+				}
+			}
+			//parbaudam vai kreisais berns lielaks par labo
+			else if (root.getLeftChNode() != null && root.getRightChNode() != null) {
+				if(((Comparable)root.getLeftChNode().getElement()).compareTo(root.getRightChNode().getElement()) > 0) {
+					if(((Comparable)root.getLeftChNode().getElement()).compareTo(root.getElement()) > 0){
+						swap(root, root.getLeftChNode());
+						reheapDown(root.getLeftChNode());
+					}
+				}
+			}
+			else {
+				if(((Comparable)root.getRightChNode().getElement()).compareTo(root.getLeftChNode().getElement()) > 0) {
+					if(((Comparable)root.getRightChNode().getElement()).compareTo(root.getElement()) > 0){
+						swap(root, root.getRightChNode());
+						reheapDown(root.getRightChNode());
+			}
+		}
+		
 		
 	}
 }
