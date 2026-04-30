@@ -1,5 +1,8 @@
 package datastr;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class MyLinkedHeap<Ttype> {
 	private MyNode<Ttype> rootNode = null;
 	private MyNode<Ttype> lastNode = null;
@@ -101,7 +104,6 @@ public class MyLinkedHeap<Ttype> {
 //		}
 //	}
 	
-	//nav pabeigts
 	public void enqueue(Ttype element) throws Exception {
 		if (isFull()) {
 			throw new Exception("Kaudze ir pilna un nav iespējams pievienot elementu");
@@ -173,6 +175,20 @@ public class MyLinkedHeap<Ttype> {
 				return;
 
 			} else {
+				// pēdējam blokam ir abi bērni
+				if (lastNode.getParentNode().getLeftChNode() != null
+						&& lastNode.getParentNode().getRightChNode() != null) {
+					int numberForNewNode = howManyElements;
+					int numberForNewNodeParent = (numberForNewNode-1 -1)/2;
+					MyNode<Ttype> currentParent = findInsertionNode();
+					currentParent.setLeftChNode(newNode);
+					newNode.setParentNode(currentParent);
+					lastNode = newNode;
+					reHeapUpMax(newNode);
+					howManyElements++;
+					return;
+				}
+
 				// pēdējam blokam nav neviens no bērniem
 				if (lastNode.getLeftChNode() == null && lastNode.getRightChNode() == null) {
 					lastNode.setLeftChNode(newNode);
@@ -184,12 +200,30 @@ public class MyLinkedHeap<Ttype> {
 				}
 
 			}
+
+			
 		}
 
-			// TODO izveidot pedējo scenāriju, kurs no labā bērna spej pārlekt
-			// uz blakus apkaškoka kreiso bērnu
+	}
+	private MyNode<Ttype> findInsertionNode() {
+		Queue<MyNode> queue = new LinkedList<>();
+		queue.add(rootNode);
+		while (!queue.isEmpty()) {
+			MyNode currentNode = queue.poll();
+			if (currentNode.getRightChNode() == null) {
+				return currentNode;
+			} else {
+				queue.add(currentNode.getRightChNode());
+			}
+			if (currentNode.getLeftChNode() == null) {
+				return currentNode;
+			} else {
+				queue.add(currentNode.getLeftChNode());
+			}
 
 		}
+		return null;
+	}
 	public void reHeapUpMax(MyNode<Ttype> nodeTemp) {
 		if(nodeTemp.getParentNode() != null) {
 			MyNode<Ttype> parentTempNode = nodeTemp.getParentNode(); 

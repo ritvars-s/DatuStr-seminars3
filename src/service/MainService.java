@@ -16,6 +16,7 @@ public class MainService {
 			h1.enqueue(99);
 			h1.enqueue(55);
 			h1.enqueue(2);
+			h1.enqueue(36);
 			h1.print();
 		}
 		catch(Exception e) {
