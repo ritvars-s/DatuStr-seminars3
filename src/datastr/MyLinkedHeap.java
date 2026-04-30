@@ -296,34 +296,48 @@ public class MyLinkedHeap<Ttype> {
 		
 	}
 	
-	private void reheapDown(MyNode<Ttype> root) throws Exception{
-		
-		if(root != null) {
-			if(root.getLeftChNode() !=null && root.getRightChNode() == null) {
-				if(((Comparable)root.getElement()).compareTo(root.getLeftChNode().getElement()) < 0) {
-					swap(root, root.getLeftChNode());
+	private void reheapDown(MyNode<Ttype> nodeTemp) {
+		if(nodeTemp != null) {
+			//ja ir tikai viens bērns un tas ir kreisais
+			if(nodeTemp.getLeftChNode() != null 
+					&& nodeTemp.getRightChNode() == null) {
+				if( ((Comparable)nodeTemp.getElement())
+			.compareTo(nodeTemp.getLeftChNode().getElement()) < 0 ) {
+					swap(nodeTemp, nodeTemp.getLeftChNode());
 				}
 			}
-			//parbaudam vai kreisais berns lielaks par labo
-			else if (root.getLeftChNode() != null && root.getRightChNode() != null) {
-				if(((Comparable)root.getLeftChNode().getElement()).compareTo(root.getRightChNode().getElement()) > 0) {
-					if(((Comparable)root.getLeftChNode().getElement()).compareTo(root.getElement()) > 0){
-						swap(root, root.getLeftChNode());
-						reheapDown(root.getLeftChNode());
-					}
+			
+			//ja ir abi bērni
+			else if (nodeTemp.getLeftChNode() != null 
+					&& nodeTemp.getRightChNode() != null) {
+				
+				//pārbaudam, vai kreisais berns ir lielāks par labo
+			if(((Comparable)nodeTemp.getLeftChNode().getElement())
+					.compareTo(nodeTemp.getRightChNode().getElement()) > 0) {
+				//vai kreisais bērns ir lielaķs par pasu bloka vērtību
+				if( ((Comparable)nodeTemp.getLeftChNode().getElement())
+						.compareTo(nodeTemp.getElement()) > 0) {
+					swap(nodeTemp, nodeTemp.getLeftChNode());
+					reheapDown(nodeTemp.getLeftChNode());
+				}
+	
+			}
+			//ja kreisais bērns ir mazaks vai vienāds ar labo bērnu
+			else
+			{
+				//vai labais bērns ir lielaķs par pasu bloka vērtību
+				if( ((Comparable)nodeTemp.getRightChNode().getElement())
+						.compareTo(nodeTemp.getElement()) > 0) {
+					swap(nodeTemp, nodeTemp.getRightChNode());
+					reheapDown(nodeTemp.getRightChNode());
 				}
 			}
-			else {
-				if(((Comparable)root.getRightChNode().getElement()).compareTo(root.getLeftChNode().getElement()) > 0) {
-					if(((Comparable)root.getRightChNode().getElement()).compareTo(root.getElement()) > 0){
-						swap(root, root.getRightChNode());
-						reheapDown(root.getRightChNode());
+				
+				
+				
 			}
+			
 		}
-		
-		
 	}
 
-}
-}
 }
