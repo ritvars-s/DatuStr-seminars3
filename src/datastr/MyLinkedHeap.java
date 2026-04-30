@@ -251,4 +251,27 @@ public class MyLinkedHeap<Ttype> {
 		}
 		
 	}
+	
+	private MyNode<Ttype> getLastNodeByNumber(int number) throws Exception{
+		if(isEmpty()) {
+			throw new Exception("kaudze ir tuksa");
+		}
+		if(number < 1) {
+			throw new Exception("Nav elementa pozicija kas ir maz'aks par 1");
+		}
+		String binary = Integer.toBinaryString(number);
+		MyNode<Ttype> currentNode = rootNode;
+		for (int i = 1; i < binary.length(); i++) {
+			if (binary.charAt(i) == 1) {
+				currentNode = currentNode.getRightChNode();
+			}
+			else {
+				currentNode = currentNode.getLeftChNode();
+			}
+		}
+	
+		return currentNode;
+		
+	}
+	
 }
