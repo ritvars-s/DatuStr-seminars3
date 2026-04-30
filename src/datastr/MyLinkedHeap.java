@@ -28,23 +28,99 @@ public class MyLinkedHeap<Ttype> {
 		return (howManyElements == 0);
 	}
 	
-	public void enqueue(Ttype newElement) throws Exception{
+//	public void enqueue(Ttype newElement) throws Exception{
+//		if (isFull()) {
+//			throw new Exception("Kaudz ir pilna un nav iespejams pievinot elementu");
+//		}
+//		if(newElement == null) {
+//			throw new Exception("Elements nevar but null");
+//		}
+//		if(isEmpty()) { //ja tiek pievionot pirmais elements
+//			MyNode<Ttype> newNode = new MyNode<Ttype>(newElement);
+//			rootNode = newNode;
+//			lastNode = newNode;
+//			howManyElements++;
+//		}
+//		else {
+//			MyNode<Ttype> newNode = new MyNode<Ttype>(newElement);
+//			//ja bus saknes elementam kreisais berns
+//			if(howManyElements == 1) {
+//				rootNode.setLeftChNode(newNode);
+//				newNode.setParentNode(rootNode);
+//				lastNode = newNode;
+//				howManyElements++;
+//				level++;
+//				reHeapUpMax(newNode);
+//				return;
+//			}
+//			
+//			if(lastNode.getLeftChNode() == null && lastNode.getRightChNode() == null) {
+//				lastNode.setLeftChNode(newNode);
+//				newNode.setParentNode(lastNode);
+//				lastNode = newNode;
+//				howManyElements++;
+//				reHeapUpMax(newNode);
+//				return;
+//			}
+//			
+//			//kad pedejam blokam nav blakus labais bloks
+//			if(lastNode.getParentNode() != null && lastNode.getRightChNode() == null) {
+//				MyNode<Ttype> parentNodeTemp = lastNode.getParentNode();
+//				parentNodeTemp.setRightChNode(parentNodeTemp);
+//				
+//				lastNode = newNode;
+//				howManyElements++;
+//				reHeapUpMax(newNode);
+//				return;
+//			}
+//			//2^0 = 1 elements 0 limeni
+//			//2^1 = 2 elementi 1 limeni
+//			//utt
+//			int sum = 0;
+//			//es nosakidroju cik ir jabut blokiem lidz sim limenim ieskaitot
+//			for(int i = 0; i <= level; i++) {
+//				sum =(int) (sum + Math.pow(2, i));
+//			}
+//			//last node ir ka pedejais bloks sava limeni
+//			if (sum == howManyElements) {
+//				MyNode<Ttype> currentNode = rootNode;
+//				while(currentNode.getLeftChNode() != null) {
+//					currentNode = currentNode.getLeftChNode();
+//				}
+//				lastNode = currentNode;
+//				
+//				lastNode.setLeftChNode(newNode);
+//				newNode.setParentNode(lastNode);
+//				lastNode = newNode;
+//				howManyElements++;
+//				level++;
+//				reHeapUpMax(newNode);
+//				return;
+//			}
+//			//TODO izveidot pedejo scenariju, kurs no laba berna spej parlekt uz blakus apakskoka bernu
+//		}
+//	}
+	
+	//nav pabeigts
+	public void enqueue(Ttype element) throws Exception {
 		if (isFull()) {
-			throw new Exception("Kaudz ir pilna un nav iespejams pievinot elementu");
+			throw new Exception("Kaudze ir pilna un nav iespējams pievienot elementu");
 		}
-		if(newElement == null) {
-			throw new Exception("Elements nevar but null");
+
+		if (element == null) {
+			throw new Exception("Elements nevar būt null");
 		}
-		if(isEmpty()) { //ja tiek pievionot pirmais elements
-			MyNode<Ttype> newNode = new MyNode<Ttype>(newElement);
+
+		if (isEmpty()) {// ja tiek pievienots pirmais elements
+			MyNode<Ttype> newNode = new MyNode<Ttype>(element);
 			rootNode = newNode;
 			lastNode = newNode;
 			howManyElements++;
-		}
-		else {
-			MyNode<Ttype> newNode = new MyNode<Ttype>(newElement);
-			//ja bus saknes elementam kreisais berns
-			if(howManyElements == 1) {
+		} else// ja tiek pievienots kārtējais ( ne pirmais) elements
+		{
+			MyNode<Ttype> newNode = new MyNode<Ttype>(element);
+			// ja būs saknes elementam kreisais bērns
+			if (howManyElements == 1) {
 				rootNode.setLeftChNode(newNode);
 				newNode.setParentNode(rootNode);
 				lastNode = newNode;
@@ -53,53 +129,67 @@ public class MyLinkedHeap<Ttype> {
 				reHeapUpMax(newNode);
 				return;
 			}
-			
-			if(lastNode.getLeftChNode() == null && lastNode.getRightChNode() == null) {
-				lastNode.setLeftChNode(newNode);
-				newNode.setParentNode(lastNode);
-				lastNode = newNode;
-				howManyElements++;
-				reHeapUpMax(newNode);
-				return;
-			}
-			
-			//kad pedejam blokam nav blakus labais bloks
-			if(lastNode.getParentNode() != null && lastNode.getRightChNode() == null) {
+
+			// kad pedjeam blokam nav blakus labais bloks
+			if (lastNode.getParentNode() != null && lastNode.getParentNode().getRightChNode() == null) {
+
 				MyNode<Ttype> parentNodeTemp = lastNode.getParentNode();
-				parentNodeTemp.setRightChNode(parentNodeTemp);
-				
+				parentNodeTemp.setRightChNode(newNode);
+				newNode.setParentNode(parentNodeTemp);
+
 				lastNode = newNode;
 				howManyElements++;
 				reHeapUpMax(newNode);
 				return;
+
 			}
-			//2^0 = 1 elements 0 limeni
-			//2^1 = 2 elementi 1 limeni
-			//utt
+			// 2^0 = 1 elements 0.līmenī
+			// 2^1 = 2 elementi 1.līmenī
+			// 2^2 = 4 elementi 2.līmenī
 			int sum = 0;
-			//es nosakidroju cik ir jabut blokiem lidz sim limenim ieskaitot
-			for(int i = 0; i <= level; i++) {
-				sum =(int) (sum + Math.pow(2, i));
+			// es noskaidroju, cik ir jābūt blokiem līdz šim līmenim ieskaitot
+			for (int i = 0; i <= level; i++) {
+				sum = (int) (sum + Math.pow(2, i));
 			}
-			//last node ir ka pedejais bloks sava limeni
+
+			// lastNode ir kā pēdejais bloks sava līmenī
 			if (sum == howManyElements) {
 				MyNode<Ttype> currentNode = rootNode;
-				while(currentNode.getLeftChNode() != null) {
+
+				// ja blokam ir kreisais berns, tad jelec uz to
+				while (currentNode.getLeftChNode() != null) {
 					currentNode = currentNode.getLeftChNode();
 				}
+
 				lastNode = currentNode;
-				
+
 				lastNode.setLeftChNode(newNode);
 				newNode.setParentNode(lastNode);
+
 				lastNode = newNode;
 				howManyElements++;
 				level++;
 				reHeapUpMax(newNode);
 				return;
+
+			} else {
+				// pēdējam blokam nav neviens no bērniem
+				if (lastNode.getLeftChNode() == null && lastNode.getRightChNode() == null) {
+					lastNode.setLeftChNode(newNode);
+					newNode.setParentNode(lastNode);
+					lastNode = newNode;
+					howManyElements++;
+					reHeapUpMax(newNode);
+					return;
+				}
+
 			}
-			//TODO izveidot pedejo scenariju, kurs no laba berna spej parlekt uz blakus apakskoka bernu
 		}
-	}
+
+			// TODO izveidot pedējo scenāriju, kurs no labā bērna spej pārlekt
+			// uz blakus apkaškoka kreiso bērnu
+
+		}
 	public void reHeapUpMax(MyNode<Ttype> nodeTemp) {
 		if(nodeTemp.getParentNode() != null) {
 			MyNode<Ttype> parentTempNode = nodeTemp.getParentNode(); 
@@ -143,18 +233,22 @@ public class MyLinkedHeap<Ttype> {
 	//pedejo bloka vertubu ieliekam root bloka
 	//samazinam how manyelements
 	//last nnode samainit leve ...
-	public void dequeue() throws Exception {
+	public Ttype dequeue() throws Exception {
 		if(isEmpty()) {
 			throw new Exception("kaudze ir tuksa nevar izmantot dequeue");
 		}
+		Ttype elem;
 		if(lastNode == rootNode) {
+			elem = rootNode.getElement();
 			lastNode = null;
 			rootNode = null;
 			howManyElements--;
-			return;
+			return elem;
 		}
 		
-		rootNode = lastNode.getElement();
+		else {
+			
+		}
 		
 	}
 }
